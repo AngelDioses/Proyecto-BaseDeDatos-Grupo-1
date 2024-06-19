@@ -1,10 +1,10 @@
 package Custom_by_me;
 
-public class SelectElements {
+public class SelectPartidas {
     private String label;
     private String value;
 
-    public SelectElements(String label, String value) {
+    public SelectPartidas(String label, String value) {
         this.label = "(" + value + ") " + label;
         this.value = value;
     }
@@ -32,9 +32,9 @@ public class SelectElements {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SelectElements that = (SelectElements) o;
+        SelectPartidas that = (SelectPartidas) o;
 
         return value != null ? value.equals(that.value) : that.value == null;
     }
-}
 
+}
