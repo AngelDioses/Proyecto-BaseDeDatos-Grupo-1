@@ -1,351 +1,502 @@
+package Controlador;
 
-package Vistas;
+import Modelo.DAO.ElementosDAO;
+import Modelo.DAO.PartidaDAO;
+import Modelo.DAO.TabsDAO;
+import Modelo.Elementos;
+import Modelo.Message.Mensaje1;
+import Modelo.Message.Mensaje2;
+import Modelo.Partida;
+import Modelo.Tabs;
+import static Vistas.V_Login.varCodCiaGlobalDeLogin;
+import Vistas.V_Partida;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.text.AbstractDocument;
 
-import Modelo.Interface.SearchOptinEvent;
-import Modelo.SearchOption;
-import javax.swing.ImageIcon;
-import Modelo.GenerarPDF.PDFCliente; // Importa la clase PDFCliente
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
+import Custom_by_me.SelectElements;
+import Custom_by_me.SelectTabs;
 
+public class C_Partida implements ItemListener, ActionListener, KeyListener, MouseListener {
 
+    PartidaDAO pDAO = new PartidaDAO();
+    V_Partida vp = new V_Partida();
+    DefaultTableModel modelPartidaI = new DefaultTableModel();
+    DefaultTableModel modelPartidaE = new DefaultTableModel();
+    TableRowSorter<DefaultTableModel> sorterI;
+    TableRowSorter<DefaultTableModel> sorterE;
+    int id = -1;
 
-public class V_Cliente extends javax.swing.JPanel {
-    
-        
-    public int opt=0;
-    
-    public V_Cliente() {
-        initComponents();
-        setOpaque(false);
-        
-        // Agregar ActionListener al botón jButton1
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+    /*Para qué*/
+    List<Elementos> elementos;
+    List<Tabs> tabs;
+
+    public C_Partida(V_Partida vp) {
+        this.vp = vp;
+        this.vp.btt_Actualizar_I.addActionListener(this);
+        this.vp.btt_Registrar_I.addActionListener(this);
+        this.vp.btt_Eliminar_I.addActionListener(this);
+        this.vp.tablaPartida_I.addMouseListener(this);
+        this.vp.tUniMed_I.addItemListener(this);
+        this.vp.btt_Actualizar_E.addActionListener(this);
+        this.vp.btt_Registrar_E.addActionListener(this);
+        this.vp.btt_Eliminar_E.addActionListener(this);
+        this.vp.tablaPartida_E.addMouseListener(this);
+        this.vp.tUniMed_E.addItemListener(this);
+        this.vp.actualizaTabla.addActionListener(this);
+        this.vp.nuevo.addActionListener(this);
+        this.elementos = new ElementosDAO().listar();
+        this.tabs = new TabsDAO().listar();
+        init();
+
     }
-    
-    public void init(){
-        tablaCliente.fixTable(jScrollPane1);
-        txtBusqueda.addEventOptionSelected(new SearchOptinEvent() {
-            @Override
-            public void optionSelected(SearchOption option, int index) {
-                opt=index;
-                txtBusqueda.setHint("Buscar " + option.getName() + "...");
-            }
-        });
-        txtBusqueda.addOption(new SearchOption("todo", new ImageIcon(getClass().getResource("/image/loadall.png"))));
-        txtBusqueda.addOption(new SearchOption("por codCliente", new ImageIcon(getClass().getResource("/image/user.png"))));
-        txtBusqueda.addOption(new SearchOption("por RUC", new ImageIcon(getClass().getResource("/image/ruc.png"))));
-    }   
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
 
-        dateChooser1 = new com.raven.datechooser.DateChooser();
-        popupMenu = new javax.swing.JPopupMenu();
-        actualizaTabla = new javax.swing.JMenuItem();
-        nuevo = new javax.swing.JMenuItem();
-        pictureBox1 = new Modelo.Design.PictureBox();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        panelShadow1 = new Modelo.Design.PanelShadow();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablaCliente = new Modelo.DesignTable.Tabla();
-        jButton1 = new javax.swing.JButton();
-        panelShadow2 = new Modelo.Design.PanelShadow();
-        nroRuc = new Modelo.Design.TextField();
-        textAreaScroll1 = new Modelo.Design.TextAreaScroll();
-        desPersona = new Modelo.Design.TextArea();
-        textAreaScroll3 = new Modelo.Design.TextAreaScroll();
-        desAlterna = new Modelo.Design.TextArea();
-        textAreaScroll5 = new Modelo.Design.TextAreaScroll();
-        desCorta = new Modelo.Design.TextArea();
-        textAreaScroll4 = new Modelo.Design.TextAreaScroll();
-        desCortaAlt = new Modelo.Design.TextArea();
-        vigente = new Modelo.Design.Combobox();
-        btt_Registrar = new Modelo.Design.Button();
-        btt_Actualizar = new Modelo.Design.Button();
-        btt_Eliminar = new Modelo.Design.Button();
-        codCompania_cb = new Modelo.Design.TextField();
-        txtBusqueda = new Modelo.Design.TextFieldSearchOption();
-
-        popupMenu.setLabel("Acciones");
-
-        actualizaTabla.setText("Actualizar");
-        popupMenu.add(actualizaTabla);
-
-        nuevo.setText("Nuevo");
-        popupMenu.add(nuevo);
-
-        pictureBox1.setImage(new javax.swing.ImageIcon(getClass().getResource("/image/registraCliente.png"))); // NOI18N
-
-        jLabel3.setFont(new java.awt.Font("SansSerif", 1, 36)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(235, 235, 235));
-        jLabel3.setText("¡Registre los clientes!");
-
-        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 17)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(51, 179, 255));
-        jLabel4.setText("Complete la información de sus clientes");
-
-        panelShadow1.setComponentPopupMenu(popupMenu);
-
-        tablaCliente.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "CodClient", "DescPersona", "RUC", "Vigente"
-            }
-        ));
-        tablaCliente.setComponentPopupMenu(popupMenu);
-        jScrollPane1.setViewportView(tablaCliente);
-
-        jButton1.setText("Generar PDF");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelShadow1Layout = new javax.swing.GroupLayout(panelShadow1);
-        panelShadow1.setLayout(panelShadow1Layout);
-        panelShadow1Layout.setHorizontalGroup(
-            panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelShadow1Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
-                .addGap(29, 29, 29))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelShadow1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(217, 217, 217))
-        );
-        panelShadow1Layout.setVerticalGroup(
-            panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelShadow1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        panelShadow2.setComponentPopupMenu(popupMenu);
-
-        nroRuc.setForeground(new java.awt.Color(40, 40, 40));
-        nroRuc.setLabelText("Número de RUC:");
-        nroRuc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nroRucActionPerformed(evt);
-            }
-        });
-
-        textAreaScroll1.setLabelText("Descripción Persona:");
-
-        desPersona.setBorder(null);
-        desPersona.setColumns(20);
-        desPersona.setForeground(new java.awt.Color(40, 40, 40));
-        desPersona.setRows(5);
-        textAreaScroll1.setViewportView(desPersona);
-
-        textAreaScroll3.setLabelText("Descripción Alterna:");
-
-        desAlterna.setBorder(null);
-        desAlterna.setColumns(20);
-        desAlterna.setForeground(new java.awt.Color(40, 40, 40));
-        desAlterna.setRows(5);
-        textAreaScroll3.setViewportView(desAlterna);
-
-        textAreaScroll5.setLabelText("Descripción Corta:");
-
-        desCorta.setBorder(null);
-        desCorta.setColumns(20);
-        desCorta.setForeground(new java.awt.Color(40, 40, 40));
-        desCorta.setRows(5);
-        textAreaScroll5.setViewportView(desCorta);
-
-        textAreaScroll4.setLabelText("Descripción Corta Alterna:");
-
-        desCortaAlt.setBorder(null);
-        desCortaAlt.setColumns(20);
-        desCortaAlt.setForeground(new java.awt.Color(40, 40, 40));
-        desCortaAlt.setRows(5);
-        textAreaScroll4.setViewportView(desCortaAlt);
-
-        vigente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Vigente", "No Vigente" }));
-        vigente.setSelectedIndex(-1);
-        vigente.setLabeText("Estado:");
-        vigente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                vigenteActionPerformed(evt);
-            }
-        });
-
-        btt_Registrar.setBackground(new java.awt.Color(240, 240, 240));
-        btt_Registrar.setText("Registrar");
-
-        btt_Actualizar.setBackground(new java.awt.Color(240, 240, 240));
-        btt_Actualizar.setText("Actualizar");
-
-        btt_Eliminar.setBackground(new java.awt.Color(240, 240, 240));
-        btt_Eliminar.setText("Eliminar");
-
-        codCompania_cb.setEditable(false);
-        codCompania_cb.setForeground(new java.awt.Color(40, 40, 40));
-        codCompania_cb.setLabelText("Código Compañía:");
-
-        javax.swing.GroupLayout panelShadow2Layout = new javax.swing.GroupLayout(panelShadow2);
-        panelShadow2.setLayout(panelShadow2Layout);
-        panelShadow2Layout.setHorizontalGroup(
-            panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelShadow2Layout.createSequentialGroup()
-                .addGap(136, 136, 136)
-                .addComponent(vigente, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(panelShadow2Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addGroup(panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelShadow2Layout.createSequentialGroup()
-                        .addGroup(panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(textAreaScroll5, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                            .addComponent(textAreaScroll1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(nroRuc, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(textAreaScroll4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                            .addComponent(textAreaScroll3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(codCompania_cb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelShadow2Layout.createSequentialGroup()
-                        .addComponent(btt_Registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btt_Actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btt_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30))))
-        );
-        panelShadow2Layout.setVerticalGroup(
-            panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelShadow2Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nroRuc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(codCompania_cb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textAreaScroll1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textAreaScroll3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45)
-                .addGroup(panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(textAreaScroll5, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                    .addComponent(textAreaScroll4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(vigente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addGroup(panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btt_Registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btt_Actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btt_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(53, 53, 53))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(pictureBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(32, 32, 32)
-                        .addComponent(txtBusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(panelShadow2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(panelShadow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pictureBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel4))
-                    .addComponent(jLabel3)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelShadow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelShadow2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(22, Short.MAX_VALUE))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    public javax.swing.JTable getTablaCliente() {
-        return tablaCliente;
+    public void init() {
+        initTablaPartida_I();
+        initTablaPartida_E();
+        vp.init();
+        initListarTabs();
+        ((AbstractDocument) vp.desPartida_I.getDocument()).setDocumentFilter(new LimitDocumentFilter(30, 0));
+        ((AbstractDocument) vp.desPartida_E.getDocument()).setDocumentFilter(new LimitDocumentFilter(30, 0));
     }
-    
-    
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        PDFCliente pdf = new PDFCliente();
-        pdf.generarPDF(tablaCliente);
-        JOptionPane.showMessageDialog(this, "PDF generado exitosamente", "Información", JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void vigenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vigenteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_vigenteActionPerformed
+    public void initListarTabs() {
+        System.out.println("Tabs");
+        vp.tUniMed_I.removeAllItems();
+        vp.tUniMed_E.removeAllItems();
+        List<Tabs> listaTab = new TabsDAO().listar();
+        for (int i = 0; i < listaTab.size(); i++) {
+            String descripcion = listaTab.get(i).getDenTab();
+            String codigo = listaTab.get(i).getCodTab();
+            vp.tUniMed_I.addItem(new SelectTabs(descripcion, codigo));
+            vp.tUniMed_E.addItem(new SelectTabs(descripcion, codigo));
 
-    private void nroRucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nroRucActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nroRucActionPerformed
+            // vp.tUniMed_I.addItem("test");
+            // vp.tUniMed_E.addItem("test");
+        }
+    }
 
-    
+    public void initListarElementos_I(int cod) {
+        //System.out.println("Elementos");
+        vp.eUniMed_I.removeAllItems();
+        List<Elementos> listaEle = new ElementosDAO().listarTabs(cod);
+        for (int i = 0; i < listaEle.size(); i++) {
+            String descripcion = listaEle.get(i).getDenElemento();
+            String codigo = listaEle.get(i).getCodElemento();
+            vp.eUniMed_I.addItem(new SelectElements(descripcion, codigo));
+            // vp.eUniMed_I.addItem(listaEle.get(i).getCodElemento());
+        }
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JMenuItem actualizaTabla;
-    public Modelo.Design.Button btt_Actualizar;
-    public Modelo.Design.Button btt_Eliminar;
-    public Modelo.Design.Button btt_Registrar;
-    public Modelo.Design.TextField codCompania_cb;
-    private com.raven.datechooser.DateChooser dateChooser1;
-    public Modelo.Design.TextArea desAlterna;
-    public Modelo.Design.TextArea desCorta;
-    public Modelo.Design.TextArea desCortaAlt;
-    public Modelo.Design.TextArea desPersona;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    public javax.swing.JScrollPane jScrollPane1;
-    public Modelo.Design.TextField nroRuc;
-    public javax.swing.JMenuItem nuevo;
-    private Modelo.Design.PanelShadow panelShadow1;
-    private Modelo.Design.PanelShadow panelShadow2;
-    private Modelo.Design.PictureBox pictureBox1;
-    public javax.swing.JPopupMenu popupMenu;
-    public Modelo.DesignTable.Tabla tablaCliente;
-    private Modelo.Design.TextAreaScroll textAreaScroll1;
-    private Modelo.Design.TextAreaScroll textAreaScroll3;
-    private Modelo.Design.TextAreaScroll textAreaScroll4;
-    private Modelo.Design.TextAreaScroll textAreaScroll5;
-    public Modelo.Design.TextFieldSearchOption txtBusqueda;
-    public Modelo.Design.Combobox vigente;
-    // End of variables declaration//GEN-END:variables
+    public void initListarElementos_E(int cod) {
+        vp.eUniMed_E.removeAllItems();
+        List<Elementos> listaEle = new ElementosDAO().listarTabs(cod);
+        for (int i = 0; i < listaEle.size(); i++) {
+            String descripcion = listaEle.get(i).getDenElemento();
+            String codigo = listaEle.get(i).getCodElemento();
+            vp.eUniMed_E.addItem(new SelectElements(descripcion, codigo));
+            // vp.eUniMed_E.addItem(listaEle.get(i).getCodElemento());
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        //System.out.println("DENTRO DE ACTION PARTIDA");
+        if (e.getSource() == vp.btt_Registrar_I) {
+            registrarDatos("I");
+            actualizarTabla();
+        }
+        if (e.getSource() == vp.btt_Actualizar_I) {
+            actualizarDatos("I");
+            actualizarTabla();
+        }
+        if (e.getSource() == vp.btt_Eliminar_I) {
+            eliminarDatos("I");
+            actualizarTabla();
+        }
+        if (e.getSource() == vp.btt_Registrar_E) {
+            registrarDatos("E");
+            actualizarTabla();
+        }
+        if (e.getSource() == vp.btt_Actualizar_E) {
+            actualizarDatos("E");
+            actualizarTabla();
+        }
+        if (e.getSource() == vp.btt_Eliminar_E) {
+            eliminarDatos("E");
+            actualizarTabla();
+        }
+        if (e.getSource() == vp.actualizaTabla) {
+            actualizarTabla();
+        }
+        if (e.getSource() == vp.nuevo) {
+            vaciarCampos();
+            actualizarTabla();
+        }
+    }
+
+    public void actualizarTabla() {
+        limpiarTabla(modelPartidaI);
+        limpiarTabla(modelPartidaE);
+        initTablaPartida_I();
+        initTablaPartida_E();
+        //System.out.println("Refrescando tabla automaticamente.");
+    }
+
+    public void initTablaPartida_I() {
+
+        List<Partida> listaI = pDAO.listarPorCodCia(varCodCiaGlobalDeLogin, "I");
+        modelPartidaI = (DefaultTableModel) vp.tablaPartida_I.getModel();
+        Object[] o = new Object[6];
+        sorterI = new TableRowSorter<>(modelPartidaI);
+        vp.tablaPartida_I.setRowSorter(sorterI);
+        limpiarTabla(modelPartidaI);
+        for (int i = 0; i < listaI.size(); i++) {
+            o[0] = listaI.get(i).getCodPartida();
+            o[1] = listaI.get(i).getCodPartidas();
+            o[2] = listaI.get(i).getDesPartida();
+
+            String tabID = (listaI.get(i).gettUniMed());
+            this.tabs.forEach((tab) -> {
+                if (tab.getCodTab().equals(tabID)) {
+                    Object item1 = new SelectTabs(tab.getDenTab(), tab.getCodTab());
+                    o[3] = item1;
+                }
+            });
+            // o[3] = listaE.get(i).gettUniMed();
+
+            String elementoID = (listaI.get(i).geteUniMed());
+            this.elementos.forEach((elemento) -> {
+
+                if (elemento.getCodElemento().equals(elementoID) && elemento.getCodTab().equals(tabID)) {
+                    Object item2 = new SelectElements(elemento.getDenElemento(), elemento.getCodElemento());
+                    o[4] = item2;
+                }
+            });
+            // o[4] = listaE.get(i).geteUniMed();
+
+            o[5] = (listaI.get(i).getVigente()) == '1' ? "Si" : "No";
+            modelPartidaI.addRow(o);
+        }
+        vp.tablaPartida_I.setModel(modelPartidaI);
+    }
+
+    public void initTablaPartida_E() {
+        List<Partida> listaE = pDAO.listarPorCodCia(varCodCiaGlobalDeLogin, "E");
+        modelPartidaE = (DefaultTableModel) vp.tablaPartida_E.getModel();
+        Object[] o = new Object[6];
+        sorterE = new TableRowSorter<>(modelPartidaE);
+        vp.tablaPartida_E.setRowSorter(sorterE);
+        limpiarTabla(modelPartidaE);
+        for (int i = 0; i < listaE.size(); i++) {
+            o[0] = listaE.get(i).getCodPartida();
+            o[1] = listaE.get(i).getCodPartidas();
+            o[2] = listaE.get(i).getDesPartida();
+
+            String tabID = (listaE.get(i).gettUniMed());
+            this.tabs.forEach((tab) -> {
+                if (tab.getCodTab().equals(tabID)) {
+                    Object item1 = new SelectTabs(tab.getDenTab(), tab.getCodTab());
+                    o[3] = item1;
+                }
+            });
+            // o[3] = listaE.get(i).gettUniMed();
+
+            String elementoID = (listaE.get(i).geteUniMed());
+            this.elementos.forEach((elemento) -> {
+
+                if (elemento.getCodElemento().equals(elementoID) && elemento.getCodTab().equals(tabID)) {
+                    Object item2 = new SelectElements(elemento.getDenElemento(), elemento.getCodElemento());
+                    o[4] = item2;
+                }
+            });
+            // o[4] = listaE.get(i).geteUniMed();
+
+            o[5] = (listaE.get(i).getVigente()) == '1' ? "Si" : "No";
+            modelPartidaE.addRow(o);
+        }
+        vp.tablaPartida_E.setModel(modelPartidaE);
+    }
+
+    public void limpiarTabla(DefaultTableModel model) {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            model.removeRow(i);
+            i = i - 1;
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        return;
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        return;
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        return;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int fila, cod;
+        if (e.getSource() == vp.tablaPartida_I) {
+            fila = vp.tablaPartida_I.getSelectedRow();
+            cod = Integer.parseInt(vp.tablaPartida_I.getValueAt(fila, 0).toString());
+            Partida pI = new PartidaDAO().listarId(varCodCiaGlobalDeLogin, cod, "I");
+            vp.desPartida_I.setText(pI.getDesPartida());
+
+            String tabID = (pI.gettUniMed());
+            this.tabs.forEach((tab) -> {
+                if (tab.getCodTab().equals((tabID))) {
+                    Object item = new SelectTabs(tab.getDenTab(), tab.getCodTab());
+                    vp.tUniMed_I.setSelectedItem(item);
+                }
+            });
+
+            String ElementoID = (pI.geteUniMed());
+            this.elementos.forEach((elemento) -> {
+                if (elemento.getCodElemento().equals(ElementoID) && elemento.getCodTab().equals(tabID)) {
+                    Object item2 = new SelectElements(elemento.getDenElemento(), elemento.getCodElemento());
+                    vp.eUniMed_I.setSelectedItem(item2);
+                }
+            });
+            // vp.tUniMed_I.setSelectedItem(pI.gettUniMed());
+            // vp.eUniMed_I.setSelectedItem(pI.geteUniMed());
+            vp.vigente_I.setSelectedItem((pI.getVigente() == '1' ? "Vigente" : "No Vigente"));
+        }
+
+        if (e.getSource() == vp.tablaPartida_E) {
+            fila = vp.tablaPartida_E.getSelectedRow();
+            cod = Integer.parseInt(vp.tablaPartida_E.getValueAt(fila, 0).toString());
+            //System.out.println("PartidaMezcla = " + cod);
+            Partida pE = new PartidaDAO().listarId(varCodCiaGlobalDeLogin, cod, "E");
+            vp.desPartida_E.setText(pE.getDesPartida());
+
+            String tabID = (pE.gettUniMed());
+            this.tabs.forEach((tab) -> {
+                if (tab.getCodTab().equals((tabID))) {
+                    Object item = new SelectTabs(tab.getDenTab(), tab.getCodTab());
+                    vp.tUniMed_E.setSelectedItem(item);
+                }
+            });
+
+            String ElementoID = (pE.geteUniMed());
+            this.elementos.forEach((elemento) -> {
+                if (elemento.getCodElemento().equals(ElementoID) && elemento.getCodTab().equals(tabID)) {
+                    Object item2 = new SelectElements(elemento.getDenElemento(), elemento.getCodElemento());
+                    vp.eUniMed_E.setSelectedItem(item2);
+                }
+            });
+            // vp.tUniMed_E.setSelectedItem(pE.gettUniMed());
+            // vp.eUniMed_E.setSelectedItem(pE.geteUniMed());
+            vp.vigente_E.setSelectedItem((pE.getVigente() == '1' ? "Vigente" : "No Vigente"));
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        return;
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        return;
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        return;
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        return;
+    }
+
+    public void registrarDatos(String tip) {
+        Partida pm = new Partida();
+        char vig;
+        if (tip == "I") {
+            pm.setCodCia(varCodCiaGlobalDeLogin);
+            pm.setIngEgr(tip);
+
+            Object item = vp.tUniMed_I.getSelectedItem();
+            String value = ((SelectTabs) item).getValue();
+            pm.settUniMed(value);
+            // pm.settUniMed(vp.tUniMed_I.getSelectedItem().toString());
+
+            Object item2 = vp.eUniMed_I.getSelectedItem();
+            String value2 = ((SelectElements) item2).getValue();
+            pm.seteUniMed(value2);
+            // pm.seteUniMed(vp.eUniMed_I.getSelectedItem().toString());
+
+            pm.setDesPartida(vp.desPartida_I.getText());
+            vig = "Vigente".equals(vp.vigente_I.getSelectedItem().toString()) ? '1' : '0';
+            pm.setVigente(vig);
+        } else {
+            pm.setCodCia(varCodCiaGlobalDeLogin);
+            pm.setIngEgr(tip);
+
+            Object item = vp.tUniMed_E.getSelectedItem();
+            String value = ((SelectTabs) item).getValue();
+            pm.settUniMed(value);
+            // pm.settUniMed(vp.tUniMed_E.getSelectedItem().toString());
+
+            Object item2 = vp.eUniMed_E.getSelectedItem();
+            String value2 = ((SelectElements) item2).getValue();
+            pm.seteUniMed(value2);
+            // pm.seteUniMed(vp.eUniMed_E.getSelectedItem().toString());
+            pm.setDesPartida(vp.desPartida_E.getText());
+            vig = "Vigente".equals(vp.vigente_E.getSelectedItem().toString()) ? '1' : '0';
+            pm.setVigente(vig);
+        }
+        if (pDAO.add(pm) == 1) { // Corregir
+            showMessage2("Partida registrada correctamente");
+            vaciarCampos();
+        } else {
+            showMessage1("Error al registrar Partida");
+        }
+    }
+
+    private boolean showMessage1(String message) {
+        Mensaje1 obj = new Mensaje1(Frame.getFrames()[1], true);
+        obj.showMessage(message);
+        return obj.isAceptar();
+    }
+
+    private boolean showMessage2(String message) {
+        Mensaje2 obj = new Mensaje2(Frame.getFrames()[1], true);
+        obj.showMessage(message);
+        return obj.isAceptar();
+    }
+
+    public void actualizarDatos(String tip) {
+        int fila, cod;
+        char vig;
+        Partida pm = new Partida();
+        if (tip == "I") {
+            fila = vp.tablaPartida_I.getSelectedRow();
+            if (fila != -1) {
+                cod = Integer.parseInt(vp.tablaPartida_I.getValueAt(fila, 0).toString());
+                pm.setCodCia(varCodCiaGlobalDeLogin);
+                pm.setIngEgr(tip);
+                pm.setCodPartida(cod);
+                pm.setDesPartida(vp.desPartida_I.getText());
+
+                Object item = vp.tUniMed_I.getSelectedItem();
+                String value = ((SelectTabs) item).getValue();
+                pm.settUniMed(value);
+
+                Object item2 = vp.eUniMed_I.getSelectedItem();
+                String value2 = ((SelectElements) item2).getValue();
+                pm.seteUniMed(value2);
+                // pm.seteUniMed(vp.eUniMed_I.getSelectedItem().toString());
+
+                vig = "Vigente".equals(vp.vigente_I.getSelectedItem().toString()) ? '1' : '0';
+                pm.setVigente(vig);
+                if (pDAO.actualizar(pm) == 1) {
+                    showMessage2("Partida registrado correctamente");
+                    vaciarCampos();
+                } else {
+                    showMessage1("Error al registrar Partida");
+                }
+            } else {
+                showMessage1("Debe seleccionar una fila");
+            }
+        } else {
+            fila = vp.tablaPartida_E.getSelectedRow();
+            if (fila != -1) {
+                //System.out.println("Hay filas seleccionadas.");
+                cod = Integer.parseInt(vp.tablaPartida_E.getValueAt(fila, 0).toString());
+                pm.setCodCia(varCodCiaGlobalDeLogin);
+                pm.setIngEgr(tip);
+                pm.setCodPartida(cod);
+                pm.setDesPartida(vp.desPartida_E.getText());
+
+                Object item = vp.tUniMed_E.getSelectedItem();
+                String value = ((SelectTabs) item).getValue();
+                pm.settUniMed(value);
+                // pm.settUniMed(vp.tUniMed_E.getSelectedItem().toString());
+
+                Object item2 = vp.eUniMed_E.getSelectedItem();
+                String value2 = ((SelectElements) item2).getValue();
+                pm.seteUniMed(value2);
+                // pm.seteUniMed(vp.eUniMed_E.getSelectedItem().toString());
+
+                vig = "Vigente".equals(vp.vigente_E.getSelectedItem().toString()) ? '1' : '0';
+                pm.setVigente(vig);
+                if (pDAO.actualizar(pm) == 1) {
+                    showMessage2("Partida registrado correctamente");
+                    vaciarCampos();
+                } else {
+                    showMessage1("Error al registrar Partida");
+                }
+            } else {
+                showMessage1("Debe seleccionar una fila");
+            }
+        }
+    }
+
+    public void eliminarDatos(String tip) {
+        int fila, cod;
+        if (tip == "I") {
+            fila = vp.tablaPartida_I.getSelectedRow();
+            //System.out.println("La fila es" + fila);
+            if (fila != -1) {
+                //System.out.println("Hay filas seleccionadas.");
+                cod = Integer.parseInt(vp.tablaPartida_I.getValueAt(fila, 0).toString());
+                new PartidaDAO().eliminarDatos(varCodCiaGlobalDeLogin, cod, tip);
+            } else {
+                showMessage1("Debe seleccionar una fila");
+            }
+        } else {
+            fila = vp.tablaPartida_E.getSelectedRow();
+            // System.out.println("La fila es" + fila);
+            if (fila != -1) {
+                //System.out.println("Hay filas seleccionadas.");
+                cod = Integer.parseInt(vp.tablaPartida_E.getValueAt(fila, 0).toString());
+                new PartidaDAO().eliminarDatos(varCodCiaGlobalDeLogin, cod, tip);
+            } else {
+                showMessage1("Debe seleccionar una fila");
+            }
+        }
+    }
+
+    public void vaciarCampos() {
+        vp.desPartida_E.setText("");
+        vp.desPartida_I.setText("");
+    }
+
+    int codT;
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getSource() == vp.tUniMed_I) {
+            Object item = vp.tUniMed_I.getSelectedItem();
+            String value = ((SelectTabs) item).getValue();
+            codT = Integer.parseInt(value);
+            initListarElementos_I(codT);
+        }
+
+        if (e.getSource() == vp.tUniMed_E) {
+            Object item = vp.tUniMed_E.getSelectedItem();
+            String value = ((SelectTabs) item).getValue();
+            codT = Integer.parseInt(value);
+            initListarElementos_E(codT);
+        }
+    }
 }
